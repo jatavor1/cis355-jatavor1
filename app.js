@@ -1,3 +1,4 @@
+require('dotenv').config()
 const express = require('express');
 const path=require('path')
 const mongoose = require('mongoose')
@@ -9,7 +10,7 @@ const Product = require('./models/Product.js')
 const userRouter = require('./routers/User.js')
 const productRouter = require('./routers/Product.js')
 
-const url = 'mongodb+srv://jatavor1:Jackson@12@cluster0.dkjo1.mongodb.net/infinity_market?retryWrites=true&w=majority'
+const url = process.env.MONGO_URL
 mongoose.connect(url, {
     useNewUrlParser: true,
     useCreateIndex: true,
@@ -19,15 +20,14 @@ mongoose.connect(url, {
 const db = mongoose.connection
 
 const app = express();
-const port=3000;
-app.listen(port)
+app.listen(process.env.PORT)
 console.log('Server started ....');
 
 app.use(express.urlencoded({extended: true})); //to parse requests using req.body
 app.use(express.json())
 //app.use(express.static(path.join(__dirname, 'public'))); // set the path to public assets
 app.use(session({
-    secret:'topsecretkey',
+    secret: process.env.SESSION_KEY,
     resave:false,
     saveUninitialized:false,
     store: MongoStore.create({ mongoUrl: url })
